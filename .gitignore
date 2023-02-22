@@ -1,5 +1,5 @@
-secret.py
+__pycache__/
 env/
+secret.py
 *.db
 *.session
-__pycache__/
