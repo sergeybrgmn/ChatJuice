@@ -149,19 +149,22 @@ async def site_msg(msg: types.Message):
     """display the list of chats w missed messages"""
     # Call the method to obtain a list of chats with missed messages (with a 'chats_limit' limit)
     chats_limit = 50
-    chat_list = await connect.get_missed(msg.from_user.id, chats_limit)   
-    keyboard = InlineKeyboardMarkup()
-    for chat in chat_list:
-        chat_title, chat_id, unread_count = chat
-        btn = InlineKeyboardButton(chat_title+", "+str(unread_count), 
-                                callback_data=f"miss,"
+    if not await connect.user_is_authorized(msg.from_user.id):
+        await msg.answer("Please login to your Telegram account befor using ChatJuice. \n Use /login command")
+    else:
+        chat_list = await connect.get_missed(msg.from_user.id, chats_limit)   
+        keyboard = InlineKeyboardMarkup()
+        for chat in chat_list:
+            chat_title, chat_id, unread_count = chat
+            btn = InlineKeyboardButton(chat_title+", "+str(unread_count), 
+                        callback_data=f"miss,"
                                       f"{str(msg.from_user.id)},"  
                                       f"{str(chat_id)},"
                                       f"{str(msg.chat.id)},"
                                       f"{str(unread_count)}"
                                       )
-        keyboard.add(btn)
-    await bot.send_message(chat_id=msg.chat.id, text=f'The channels with missed messages (Title, missed amount)', reply_markup=keyboard)
+            keyboard.add(btn)
+        await bot.send_message(chat_id=msg.chat.id, text=f'The channels with missed messages (Title, missed amount)', reply_markup=keyboard)
 
 
 @dp.message_handler(commands='gr')
@@ -238,7 +241,7 @@ async def process_code(msg: types.Message, state: FSMContext):
             await state.set_state(UserForm.password)
             await msg.answer("You are using 2FA for Telegram login. Enter password:") 
         else:
-            await msg.answer(f"result:{out}") 
+            await msg.answer(f"Great. Now you can squeeze the juice! Start with /miss command to catch up!") 
             await state.finish()
 
 @dp.message_handler(state=UserForm.password)
@@ -249,7 +252,7 @@ async def process_code(msg: types.Message, state: FSMContext):
         password = msg.text
         await state.update_data(password=password)
         out = await connect.input_password(msg.from_user.id, password)
-        await msg.answer(f"result:{out}") 
+        await msg.answer(f"Great. Now you can squeeze the juice! Start with /miss command to catch up!") 
         await state.finish()         
 
 if __name__ == '__main__':

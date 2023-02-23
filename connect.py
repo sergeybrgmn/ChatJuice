@@ -301,13 +301,27 @@ async def get_missed(ext_user_id: int, feedlen=50) -> List:
         await client.connect()
     except OSError:
         print('Failed to connect')
-    #print("Check auth opt 2", await client.is_user_authorized())
     chats = [(
             d.name, 
             d.entity.id, 
             d.unread_count
             ) async for d in client.iter_dialogs(limit=feedlen) if (d.is_channel == True and d.unread_count != 0)]
     return chats
+
+async def user_is_authorized(ext_user_id: int):
+    """Check if the user is authorized (has before passed the login flow)"""
+    print("inside check")
+    client = user_clients.get_client(ext_user_id)
+    print("the client:", client)
+    try:
+        await client.connect()
+    except OSError:
+        print('Failed to connect')
+    print("ready to check auth")
+    if await client.is_user_authorized():
+        return True
+    else:
+        return False
 
 def check_users_exist():
     """Init User client class"""

@@ -1,6 +1,6 @@
 # ChatJuice will squeeze the essence
 
-### About the solution
+## About the solution
 
 The solution should help to catch up on the discussions from your group chats. 
 
@@ -11,7 +11,7 @@ After that it's up to you to decide if you are interestred to read this thread.
 
 That's exactly what ChatJuice does, just "squeeze the essence" of the thread and "says" (hello GenAI) it in a few words. 
 
-### ChatJuice bot
+## ChatJuice bot
 
 * Currently working with Telegram only.
 * The [TG bot](bot.py) is used as an interface, taking user commands and showing the results (bot.py)
@@ -21,7 +21,7 @@ That's exactly what ChatJuice does, just "squeeze the essence" of the thread and
 * All the user, requests and balance [data is managed](dataflow.py) with SQLite lib. The low-level queries are defined [here](db.py)
 
 
-### Main userflow
+## Main userflow
 
 Topics in the missed discussions:
 1) Login to your TG account  
@@ -29,18 +29,30 @@ Topics in the missed discussions:
 3) select the chat to "squeeze the juice"
 4) Get the list of topics discussed with links to the start of the topic discussion
 
+## Privacy issue
 
-### Project Roadmap
-High confidence, Big impact features (ICe):
+ChatJuice is not storing the original messages in the database, only the result of summarization with no connection to any person.
+
+## Project Roadmap
+### WIP
+* Exception for working without login
+* Show number of topics detected
+
+
+### High Confidence, Big Impact features, Easy (ICE):
 * Calculate the token consumption for each user
-* Predict cost of the summary request before
-* Offer free summarization bazed on the requests of others
+* Predict cost of the summary request before use
 
-low confidence, Big impact features (ice)
-* 
+### High Confidence, Big Impact features, not easy (ICe):
+* Offer free summarization bazed on the requests of others - helps to attract new users for free.
+
+### low confidence, Big impact features, not easy (Ice)
+This things need a research.
+* Detect and record recommendation 
+* NN to detect new topic
 
 
-low confidence, small impact features (ice)
+### low confidence, small impact features, not easy (ice)
 
 
 

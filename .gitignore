@@ -3,3 +3,4 @@ env/
 secret.py
 *.db
 *.session
+*.session-journal
