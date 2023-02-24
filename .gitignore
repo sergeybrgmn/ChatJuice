@@ -1,7 +1,7 @@
 __pycache__/
 env/
 .env
-secret.py
 *.db
 *.session
 *.session-journal
+test_cases.py
