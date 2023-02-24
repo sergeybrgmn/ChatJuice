@@ -8,13 +8,16 @@ from tokenize import String
 from typing import List, Tuple
 from telethon import TelegramClient, errors
 import pytz
-import secret
 import topic_sense
+
+import os
+from dotenv import load_dotenv
 
 utc=pytz.UTC
 
-api_id = secret.TG_API_ID
-api_hash = secret.TG_API_HASH
+load_dotenv()
+API_ID = os.getenv('TG_API_ID')
+API_HASH = os.getenv('TG_API_HASH')
 
 #The class to keep user_id (external from messanger) with client objects of the connection
 class UserClients:
@@ -22,7 +25,7 @@ class UserClients:
         self.data = {}
     
     def get_client(self,user_id):
-        return self.data.setdefault(user_id, TelegramClient(f'session_{user_id}', api_id, api_hash))
+        return self.data.setdefault(user_id, TelegramClient(f'session_{user_id}', API_ID, API_HASH))
     
     def __repr__(self):
         return f'UserClient({self.data})'
@@ -276,7 +279,7 @@ async def get_chat_topics(ext_user_id: int, date: datetime, chat_id: int) -> Tup
     # Find out what a topic is using OpenAI API 
     topics = []
     for group in groups:
-        model_output = topic_sense.get_topic_openai_curie(group,useEng=False)
+        model_output = topic_sense.get_topic_openai_davinchi(group,useEng=False)
         topic = model_output["choices"][0]["text"]
         topics.append(topic)   
     return topics, links
@@ -310,14 +313,11 @@ async def get_missed(ext_user_id: int, feedlen=50) -> List:
 
 async def user_is_authorized(ext_user_id: int):
     """Check if the user is authorized (has before passed the login flow)"""
-    print("inside check")
     client = user_clients.get_client(ext_user_id)
-    print("the client:", client)
     try:
         await client.connect()
     except OSError:
         print('Failed to connect')
-    print("ready to check auth")
     if await client.is_user_authorized():
         return True
     else:

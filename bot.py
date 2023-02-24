@@ -9,14 +9,17 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from datetime import datetime, date
 
+import os
+from dotenv import load_dotenv
 import connect
-import secret
 import topic_sense
 import dataflow
+import test_cases
 
 #apply token
-TOKEN = secret.CHOICE_BOT_TOKEN
-bot = Bot(token=TOKEN)
+load_dotenv()
+BOT_TOKEN = os.getenv('JUICE_BOT_TOKEN')
+bot = Bot(token=BOT_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 #form_router = Router()
@@ -128,20 +131,23 @@ async def site_msg(msg: types.Message):
     """display the list of group chats"""
     day = datetime.combine(date.today(), datetime.min.time())
     chats_limit = 50
-     # Call the method to obtain a list of latest chats  (with a 'chats_limit' limit)
-    chat_list = await connect.get_chats(msg.from_user.id, chats_limit)
+    if not await connect.user_is_authorized(msg.from_user.id):
+        await msg.answer("Please login to your Telegram account befor using ChatJuice. \n Use /login command")
+    else:
+        # Call the method to obtain a list of latest chats  (with a 'chats_limit' limit)
+        chat_list = await connect.get_chats(msg.from_user.id, chats_limit)
     
-    keyboard = InlineKeyboardMarkup()
-    for chat in chat_list:
-        chat_title, chat_id, unread_count = chat
-        btn = InlineKeyboardButton(chat_title, 
+        keyboard = InlineKeyboardMarkup()
+        for chat in chat_list:
+            chat_title, chat_id, unread_count = chat
+            btn = InlineKeyboardButton(chat_title, 
                             callback_data=f"day,"
                                           f"{str(msg.from_user.id)}," 
                                           f"{str(chat_id)},"
                                           f"{str(msg.chat.id)}"
                                           )
-        keyboard.add(btn)
-    await bot.send_message(chat_id=msg.chat.id, text=f'The top active channels from today', reply_markup=keyboard)
+            keyboard.add(btn)
+        await bot.send_message(chat_id=msg.chat.id, text=f'The top active channels from today', reply_markup=keyboard)
 
 
 @dp.message_handler(commands='miss')
@@ -170,7 +176,7 @@ async def site_msg(msg: types.Message):
 @dp.message_handler(commands='gr')
 async def site_msg(msg: types.Message):
     """test grouping"""
-    groups = topic_sense.group_messages(topic_sense.test_1)
+    groups = topic_sense.group_messages(test_cases.test__grouping_1)
     for i, group in enumerate(groups):
         print(f"Group #{i}")
         print(group)

@@ -1,29 +1,22 @@
 """The message grouping and topic extraction logic"""
 
 import os
+from dotenv import load_dotenv
 from xmlrpc.client import boolean
 import openai
-import secret
 from typing import List, Tuple
 
-
+load_dotenv() 
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 new_group_phrases = ["коллеги", "привет", "друзья", "ребят", "дорогие",
                     "гайз", "мужики", "всем привет", "парни", "hello", "guys",
                     "добрый день", "информация", "всем", "a посоветуйте",
                     "а кстати", "есть у кого", "кто хочет", "знатоки"]
-openai.api_key = secret.OPENAI_API_KEY
+
+
 topic_task = "Name in English in maximum 4 words the topic for this series of chat messages:\n\n"
 
-#test case for the grouping
-test_1 = [
-    {'id': 1, 'text': 'Hello, how are you?', 'reply_to_msg_id': None},
-    {'id': 2, 'text': 'I am good, thanks for asking.', 'reply_to_msg_id': 1},
-    {'id': 3, 'text': 'That is great to hear', 'reply_to_msg_id': None},
-    {'id': 4, 'text': 'Guys, what do you think about the meeting today?', 'reply_to_msg_id': None},
-    {'id': 5, 'text': 'I thought it was productive.', 'reply_to_msg_id': 4},
-    {'id': 6, 'text': 'I agree.', 'reply_to_msg_id': 1}
-]
 
 def group_messages(chat_id: int, messages: List, useEng=False) -> Tuple:
     """The method to group the messages according to the logic:

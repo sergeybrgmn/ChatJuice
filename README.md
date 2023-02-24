@@ -35,8 +35,8 @@ ChatJuice is not storing the original messages in the database, only the result 
 
 ## Project Roadmap
 ### WIP
-* Exception for working without login
 * Show number of topics detected
+* Improve grouping into threads
 
 
 ### High Confidence, Big Impact features, Easy (ICE):
