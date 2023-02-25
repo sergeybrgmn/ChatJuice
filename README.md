@@ -4,7 +4,8 @@
 
 The solution should help to catch up on the discussions from your group chats. 
 
-Do you remember the last time your had 200-300-1000-3000 unread messages in a community chat. An absolutely no time to engage last week and no energy to read 'em all. 
+Do you remember the last time your had 200-300-1000-3000 unread messages in a community chat?
+A frustrating [FOMO*](https://en.wikipedia.org/wiki/Fear_of_missing_out) feeling, while absolutely no time to engage last week and no energy to read 'em all. 
 
 Much easier when all the missed messages are segmented into threads and you know what was the topic name of this thread. 
 After that it's up to you to decide if you are interestred to read this thread. 
@@ -56,3 +57,4 @@ This things need a research.
 
 
 
+* FOMO - Fear of missing out
