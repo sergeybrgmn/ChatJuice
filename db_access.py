@@ -1,5 +1,4 @@
 """I/O to database"""
-import os
 from typing import Dict, List, Tuple
 
 import sqlite3
