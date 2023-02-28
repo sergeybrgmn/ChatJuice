@@ -10,15 +10,19 @@ from aiogram.dispatcher import FSMContext
 from datetime import datetime, date
 
 import os
-from dotenv import load_dotenv
+# No need when importing env-file while running the docker container 
+# Uncomment if debugging on a local machine and using .env file
+#from dotenv import load_dotenv 
+
+
 import connect
 import topic_sense
 import dataflow
 
-#apply token
-load_dotenv()
-BOT_TOKEN = os.getenv('JUICE_BOT_TOKEN')
-bot = Bot(token=BOT_TOKEN)
+#  No need when importing env-file while running the docker container 
+#load_dotenv()
+
+bot = Bot(token=os.environ.get('JUICE_BOT_TOKEN'))
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 #form_router = Router()

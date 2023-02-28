@@ -2,6 +2,8 @@ __pycache__
 *.session
 *.session-journal
 *.db
+.env
+env/
 test_cases.py
 .gitignore
 .git

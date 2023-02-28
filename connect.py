@@ -11,11 +11,13 @@ import pytz
 import topic_sense
 
 import os
-from dotenv import load_dotenv
+# No need when importing env-file while running the docker container 
+#from dotenv import load_dotenv
+#load_dotenv()
 
 utc=pytz.UTC
 
-load_dotenv()
+
 API_ID = os.getenv('TG_API_ID')
 API_HASH = os.getenv('TG_API_HASH')
 

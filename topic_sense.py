@@ -1,12 +1,14 @@
 """The message grouping and topic extraction logic"""
 
 import os
-from dotenv import load_dotenv
 from xmlrpc.client import boolean
 import openai
 from typing import List, Tuple
 
-load_dotenv() 
+# No need when importing env-file while running the docker container 
+#from dotenv import load_dotenv 
+#load_dotenv()
+
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 new_group_phrases = ["коллеги", "привет", "друзья", "ребят", "дорогие",
