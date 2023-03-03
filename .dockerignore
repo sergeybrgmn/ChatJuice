@@ -8,3 +8,4 @@ test_cases.py
 .gitignore
 .git
 Dockerfile
+*.json
