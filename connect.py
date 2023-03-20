@@ -8,12 +8,13 @@ from tokenize import String
 from typing import List, Tuple
 from telethon import TelegramClient, errors
 import pytz
-import topic_sense
+import topic_naming
+import topic_group
 
 import os
 # No need when importing env-file while running the docker container 
-#from dotenv import load_dotenv
-#load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 utc=pytz.UTC
 
@@ -245,20 +246,21 @@ async def get_chat_missed_topics(ext_user_id: int, chat_id: int, missed: int) ->
     miss_msgs_sorted = sorted(miss_msgs, key=lambda d: d['id'])
 
     # Group messages
-    groups,links = topic_sense.group_messages(chat_id, miss_msgs_sorted,useEng=False)
+    groups,links = topic_group.group_messages(chat_id, miss_msgs_sorted,useEng=False)
 
     print("The number of topics:", len(groups))
 
     # Find out what a topic is using OpenAI API 
     topics = []
     for group in groups:
-        model_output = topic_sense.get_topic_openai_curie(group,useEng=False)
-        topic = model_output["choices"][0]["text"]
+        topic = topic_naming.get_topic(group, 'curie', useEng=False)
         topics.append(topic)   
     return topics, links
 
 async def get_chat_topics(ext_user_id: int, date: datetime, chat_id: int) -> Tuple:
     """Get the topics of the messages for date specified"""
+
+    print("Method 'get_chat_topics' is in DEBUG_MODE!!! Returns groups")
     
     client = user_clients.get_client(ext_user_id)
 
@@ -273,18 +275,23 @@ async def get_chat_topics(ext_user_id: int, date: datetime, chat_id: int) -> Tup
     # Sort from the earliest to the last one
     date_msgs_sorted = sorted(date_msgs, key=lambda d: d['id'])
 
+
     # Group messages
-    groups,links = topic_sense.group_messages(chat_id, date_msgs_sorted,useEng=False)
+    groups,links = topic_group.group_messages(chat_id, date_msgs_sorted,useEng=False)
 
     print("The number of topics:", len(groups))
 
+    return groups, links
+
     # Find out what a topic is using OpenAI API 
+    """
     topics = []
     for group in groups:
-        model_output = topic_sense.get_topic_openai_davinchi(group,useEng=False)
-        topic = model_output["choices"][0]["text"]
+        #topic = topic_naming.get_topic(input_text=group, method='curie', useEng=False)
+        topic = topic_naming.get_chat_topic(input_text=group, method="gpt3.5", useEng=False)
         topics.append(topic)   
     return topics, links
+    """
     
 async def get_chats(ext_user_id: int,feedlen=50) -> List:
     """Get the list of peer chats among last N dialogs"""

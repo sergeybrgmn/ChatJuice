@@ -2,6 +2,7 @@ __pycache__
 *.session
 *.session-journal
 *.db
+*.txt
 .env
 env/
 test_cases.py

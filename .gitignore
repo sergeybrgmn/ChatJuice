@@ -4,4 +4,5 @@ env/
 *.db
 *.session
 *.session-journal
+*.txt
 test_cases.py

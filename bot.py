@@ -12,15 +12,13 @@ from datetime import datetime, date
 import os
 # No need when importing env-file while running the docker container 
 # Uncomment if debugging on a local machine and using .env file
-#from dotenv import load_dotenv 
-
-
+from dotenv import load_dotenv 
 import connect
-import topic_sense
+import topic_group
 import dataflow
 
 #  No need when importing env-file while running the docker container 
-#load_dotenv()
+load_dotenv()
 
 bot = Bot(token=os.environ.get('JUICE_BOT_TOKEN'))
 storage = MemoryStorage()
@@ -179,12 +177,24 @@ async def site_msg(msg: types.Message):
 @dp.message_handler(commands='gr')
 async def site_msg(msg: types.Message):
     """test grouping"""
-    groups = topic_sense.group_messages(test_cases.test__grouping_1)
-    for i, group in enumerate(groups):
-        print(f"Group #{i}")
-        print(group)
-    await msg.answer(f"test passed. The number of topics: {len(groups)}")
-
+    if not await connect.user_is_authorized(msg.from_user.id):
+        await msg.answer("Please login to your Telegram account befor using ChatJuice. \n Use /login command")
+    else:
+        #Get the groups of the day messages 
+        day = datetime.combine(date.today(), datetime.min.time())
+        file1 = open("debug_groups.txt", "w")
+        #Men pohod
+        #chat_id = 1608315521
+        #Mindcraft_men
+        chat_id = 1479003314
+        groups, links = await connect.get_chat_topics(msg.from_user.id, day, chat_id)
+        for i, group in enumerate(groups):
+            file1.write(f"Group #{i} \n ")
+            file1.write(group + "\n")
+        file1.close()
+    
+        await msg.answer(f"The file is recorded")
+    
 # Temporary command to restore the client
 @dp.message_handler(commands='client')
 async def start_command(msg: types.Message):
