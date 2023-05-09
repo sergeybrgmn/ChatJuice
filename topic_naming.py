@@ -12,15 +12,15 @@ load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # A task as input prompt to the OpenAI model
-topic_task = "Name in English in maximum 4 words the topic for this series of chat messages:\n\n"
+topic_task = "Name in English in maximum 6 words the topic for this series of chat messages:\n\n"
 openai_text_models = {
                 'davinci': {'model': 'text-davinci-003', 'token_limit': 3700},
                 'curie': {'model': 'text-curie-001', 'token_limit': 1600},
-                'gpt3.5': {'model': 'gpt-3.5-turbo', 'token_limit': 3700}
+                'gpt3.5': {'model': 'gpt-3.5-turbo', 'token_limit': 1000}
                 } 
 
 model_basic_settings = {
-            'temperature':0.1,
+            'temperature':0.7,
             'max_tokens':64,
             'top_p':1.0,
             'frequency_penalty':0.0,
@@ -44,7 +44,8 @@ def get_chat_topic(input_text: str, method='gpt3.5', useEng=False):
         messages=[
             {"role": "system", "content": "You are an assistant that helps understand the topic of the discussion."},
             {"role": "user", "content": msg_content}
-        ]
+        ],
+        temperature=model_basic_settings['temperature']
         )
     topic = response["choices"][0]["message"]["content"]
     return topic

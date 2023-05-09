@@ -14,7 +14,7 @@ import os
 # Uncomment if debugging on a local machine and using .env file
 from dotenv import load_dotenv 
 import connect
-import topic_group
+import topic_naming
 import dataflow
 
 #  No need when importing env-file while running the docker container 
@@ -65,12 +65,13 @@ async def process_callback_chat(callback_query: types.CallbackQuery):
 
     #Get the topics of the day messages 
     day = datetime.combine(date.today(), datetime.min.time())
+    print(chat_id)
     topic_list, links = await connect.get_chat_topics(int(user_id), day, int(chat_id))
 
     link_list = []
     for topic, link in zip(topic_list,links):
         #link_text = md.link(topic_name,link)
-        link_text = f"<a href='{link}'>{topic}</a>"
+        link_text = f"<a href='{link}'> - {topic}\n</a>"
         link_list.append(link_text)
 
     message_text = "\n".join(link_list)
@@ -119,7 +120,7 @@ async def process_callback_chat(callback_query: types.CallbackQuery):
     link_list = []
     for topic, link in zip(topic_list,links):
         #link_text = md.link(topic_name,link)
-        link_text = f"<a href='{link}'>{topic}</a>"
+        link_text = f"<a href='{link}'> - {topic}\n</a>"
         link_list.append(link_text)
 
     message_text = "\n".join(link_list)
@@ -176,7 +177,7 @@ async def site_msg(msg: types.Message):
 
 @dp.message_handler(commands='gr')
 async def site_msg(msg: types.Message):
-    """test grouping"""
+    """test grouping. Used for test"""
     if not await connect.user_is_authorized(msg.from_user.id):
         await msg.answer("Please login to your Telegram account befor using ChatJuice. \n Use /login command")
     else:
@@ -186,14 +187,27 @@ async def site_msg(msg: types.Message):
         #Men pohod
         #chat_id = 1608315521
         #Mindcraft_men
-        chat_id = 1479003314
+        #chat_id = 1479003314
+        #RU IT in TLV talks
+        #chat_id = 1636401531
+        #Relocation Israel
+        #chat_id = 1779908622
+        #BCG_alumni
+        chat_id = 1200358594
+
         groups, links = await connect.get_chat_topics(msg.from_user.id, day, chat_id)
         for i, group in enumerate(groups):
             file1.write(f"Group #{i} \n ")
             file1.write(group + "\n")
         file1.close()
     
-        await msg.answer(f"The file is recorded")
+        for group in groups:
+            topic = topic_naming.get_chat_topic(group,'gpt3.5',useEng=False)
+            print(topic)
+
+        await msg.answer(f"The file is recorded. The test topic are defined")
+
+
     
 # Temporary command to restore the client
 @dp.message_handler(commands='client')

@@ -253,14 +253,14 @@ async def get_chat_missed_topics(ext_user_id: int, chat_id: int, missed: int) ->
     # Find out what a topic is using OpenAI API 
     topics = []
     for group in groups:
-        topic = topic_naming.get_topic(group, 'curie', useEng=False)
+        topic = topic_naming.get_chat_topic(input_text=group, method="gpt3.5", useEng=False)
         topics.append(topic)   
     return topics, links
 
 async def get_chat_topics(ext_user_id: int, date: datetime, chat_id: int) -> Tuple:
     """Get the topics of the messages for date specified"""
 
-    print("Method 'get_chat_topics' is in DEBUG_MODE!!! Returns groups")
+    #print("Method 'get_chat_topics' is in DEBUG_MODE!!! Returns groups")
     
     client = user_clients.get_client(ext_user_id)
 
@@ -281,17 +281,18 @@ async def get_chat_topics(ext_user_id: int, date: datetime, chat_id: int) -> Tup
 
     print("The number of topics:", len(groups))
 
-    return groups, links
+    #To debug grouping into threads
+    #return groups, links
 
     # Find out what a topic is using OpenAI API 
-    """
+    
     topics = []
     for group in groups:
         #topic = topic_naming.get_topic(input_text=group, method='curie', useEng=False)
         topic = topic_naming.get_chat_topic(input_text=group, method="gpt3.5", useEng=False)
         topics.append(topic)   
     return topics, links
-    """
+    
     
 async def get_chats(ext_user_id: int,feedlen=50) -> List:
     """Get the list of peer chats among last N dialogs"""
